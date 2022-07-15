@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main_div">
+        <div class="music_container">
+            <h2 id="title">Jaan Nisaar</h2>
+            <h3 id="artist">Arijit Singh</h3>
+            <div class="img_container">
+                <img src="images/amazing-animal-beautiful-beautifull.jpg" alt="">
+            </div>
+            <audio src="music/Jaan Nisaar - Lyrical Kedarnath Arijit Singh Sushant Singh Rajput Sara Ali Khan Amit Tri.mp3"></audio>
+  
+             <div class="progressbar_container" id=" progress_container">
+                 <div class="progress_duration_meter">
+                     <div id="current_time">0:00</div>
+                     <div id="duration">4:09</div>
+                 </div>
+                 <div class="progress_div" id="progress_div" >
+                     <div class="progress" id="progress"></div>
+                 </div>
+             </div>
+
+            <div class="music_controls">
+                <i class="fas fa-backward main_button" id="prev" title="Previous"></i>
+                <i class="fas fa-play main_button" id="play" title="Play"></i>
+                <i class="fas fa-forward main_button" id="next" title="Next"></i>
+            </div>
+        </div>
+    </div>
+    <script>
+        const music = document.querySelector("audio");
+        const img=document.querySelector('img');
+        const play = document.getElementById("play");
+        const artist = document.getElementById("artist");
+        const title = document.getElementById("title");
+        const prev = document.getElementById("prev");
+        const next = document.getElementById("next");
+        
+
+        let progress = document.getElementById('progress');
+        let total_duration = document.getElementById('duration');
+        let current_time = document.getElementById('current_time');
+        const progress_div = document.getElementById('progress_div');
+        const songs =[
+            {
+            name:"Jaan Nisaar - Lyrical Kedarnath Arijit Singh Sushant Singh Rajput Sara Ali Khan Amit Tri",
+            title: " Jaan Nisaar  ",
+            ima: "amazing-animal-beautiful-beautifull (2)",
+            artist:" Arijit Singh "
+            },
+            
+            {
+            name:"Janam Janam Ka Saath Hai Mohammed Rafi, Lata Mangeshkar Bheegi Palkein Smita Patil, Raj Ba",
+            ima: "hacking-binary-code-keyboard-internet",
+            title: " Janam Janam Ka Saath Hai",
+            artist:"Mohammed Rafi, Lata Mangeshka "
+            },
+
+            {
+            name:"Justin Bieber - Baby ft. Ludacris (Official Music Video)",
+            ima: "intel-3064506_1280",
+            title: " Baby",
+            artist:"Justin Biber "
+           
+            },
+
+            {
+            name:"Justin Bieber - Sorry (Lyrics)",   
+            ima: "pexels-photo-230629",
+            title: "Sorry ",
+            artist:"Justin Bieber"
+            },
+
+            {
+            name:"Justin Bieber - What Do You Mean (Official Lyric Video)",
+            ima: "pexels-photo-247478",
+            title: "What Do You Mean",
+            artist:"Justin Bieber " 
+            },
+
+            {
+            name:"Justin Bieber & benny blanco - Lonely (Official Music Video)",
+            ima: "pexels-photo-326055",
+            title: "Lonely",
+            artist:" Justin Bieber & benny blanco "
+            },
+            
+            {
+            name:"Lag Jaa Gale - Sadhana, Lata Mangeshkar, Woh Kaun Thi Romantic Song",
+            ima: "pexels-photo-709552",
+            title: "Lag Jaa Gale",
+            artist:"  Sadhana, Lata Mangeshkar "
+            }
+            
+        ];
+
+        let isPlaying = false;
+
+        const playMusic=() => {
+            isPlaying = true;
+            music.play();
+            play.classList.replace("fa-play", "fa-pause");
+            img.classList.add("anime");
+        };
+
+        const pauseMusic =() => {
+            isPlaying = false;
+            music.pause();
+            play.classList.replace("fa-pause", "fa-play");
+            img.classList.remove("anime");
+        };
+
+        play.addEventListener('click', () => {
+
+            isPlaying ? pauseMusic() : playMusic();
+        });
+        const loadSond =(songs)=>{
+                    
+        }
+        const loadSong =(songs)=>{
+            title.textContent =songs.title;
+            artist.textContent =songs.artist;
+            music.src ="music/" +songs.name+ ".mp3";
+            img.src="images/"+songs.ima+".jpg";
+        };
+        songIndex =0;
+        const nextSong = () =>{
+            songIndex= (songIndex+1)% songs.length;
+            loadSong(songs[songIndex ]);
+            playMusic();
+        };
+
+        const prevSong = () =>{
+            songIndex= (songIndex-1 +songs.length)% songs.length;
+            loadSong(songs[songIndex ]);
+            playMusic();
+        };
+        
+        music.addEventListener("timeupdate", (event) =>{
+            const {currentTime, duration} = event.srcElement;
+            let progress_time = (currentTime / duration) * 100;
+            progress.style.width = `${progress_time}%`;
+            let min_duration = Math.floor(duration/60);
+            let sec_duration = Math.floor(duration % 60);
+            let tot_duration =`${min_duration}:${sec_duration}`;
+            
+            if(duration){
+                total_duration.textContent = `${tot_duration}`;
+            }
+
+
+            let min_currentTime = Math.floor(currentTime/60);
+            let sec_currentTime = Math.floor(currentTime % 60);
+            
+            if(sec_currentTime < 10){
+                sec_currentTime = `0${sec_currentTime}`;
+            }
+            let tot_currentTime =`${min_currentTime}:${sec_currentTime}`;
+            current_time.textContent = `${tot_currentTime}`;
+        });
+        
+        progress_div.addEventListener('click', (event) =>{
+            const {duration} = music;
+            // const duration =music.duration;
+            let move_progress = (event.offsetX / event.srcElement.clientWidth)*duration;
+            music.currentTime = move_progress;
+        })
+
+        music.addEventListener('ended', nextSong);
+        next.addEventListener('click', nextSong);
+        prev.addEventListener('click', prevSong);
+    </script>
+</body>
+</html>
